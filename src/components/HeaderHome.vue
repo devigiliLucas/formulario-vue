@@ -57,12 +57,6 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: "headerPage",
-  }
-</script>
-
 <style scoped>
 #Header {
   height: 15vh;
@@ -156,3 +150,9 @@ a:hover {
   background-color: rgba(0, 0, 0, 0.616);
 }
 </style>
+
+<script>
+export default {
+  name: "headerPage",
+  }
+</script>
