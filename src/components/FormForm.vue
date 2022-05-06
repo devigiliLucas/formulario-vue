@@ -23,18 +23,29 @@
         </div>
         <label>Nome completo</label>
         <br />
-        <input type="text" class="bigInput" name="nome" required />
+        <input
+          type="text"
+          class="bigInput name"
+          name="nome"
+          autocomplete="off"
+        />
         <div id="labelEmail">
           <label>E-mail</label>
           <label>Confirmar e-mail</label>
         </div>
         <div id="email">
-          <input type="text" class="mediumInput" name="email" required />
           <input
             type="text"
-            class="mediumInput paddingInput"
+            class="mediumInput email"
+            name="email"
+            autocomplete="off"
+          />
+          <input
+            type="text"
+            class="mediumInput paddingInput confirmacao"
             name="confirmacao"
-            required
+            formtarget="email"
+            autocomplete="off"
           />
         </div>
         <div id="labelNumbers">
@@ -42,17 +53,23 @@
           <label>Celular</label>
         </div>
         <div id="numbers">
-          <input type="number" class="mediumInput" name="cpf" required />
           <input
             type="number"
-            class="mediumInput paddingInput"
+            class="mediumInput cpf"
+            name="cpf"
+            maxlength="14"
+            autocomplete="off"
+          />
+          <input
+            type="number"
+            class="mediumInput paddingInput celphone"
             name="celular"
-            required
+            min="1"
           />
         </div>
         <label>Data de nascimento</label>
         <br />
-        <input type="date" class="mediumInput data" name="data" required />
+        <input type="date" class="mediumInput data" name="data" />
         <p class="bottonText">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit
         </p>
@@ -95,24 +112,29 @@
           <label>Cidade</label>
         </div>
         <div id="logradouro1">
-          <input type="text" class="mediumInput" required />
-          <input type="text" class="mediumInput paddingInput" required />
+          <input type="text" class="mediumInput contry" required />
+          <input type="text" class="mediumInput paddingInput city" required />
         </div>
         <div id="labelLogradouro2">
           <label>Cep</label>
           <label>Endereço</label>
         </div>
         <div id="logradouro2">
-          <input type="text" class="mediumInput" required />
-          <input type="text" class="mediumInput paddingInput" required />
+          <input type="text" class="mediumInput cep" required />
+          <input
+            type="text"
+            class="mediumInput paddingInput address"
+            required
+          />
         </div>
         <label>Número</label>
         <br />
-        <input type="text" class="bigInput" required />
+        <input type="text" class="bigInput number" required />
         <div id="button">
           <button class="btn next2" @click="hiddenForm2">Confirmar</button>
         </div>
       </form>
+
       <form id="form3" hidden>
         <div class="success-checkmark">
           <div class="check-icon">
@@ -137,8 +159,8 @@
           </p>
           <br />
         </div>
-        <div id="button">
-          <button class="btn2 next2">Continuar</button>
+        <div id="button3">
+          <a href="/" class="btn2">Continuar</a>
         </div>
       </form>
     </div>
@@ -150,13 +172,83 @@ export default {
   name: "FormForm",
   methods: {
     hiddenForm1() {
-      document.getElementById("form1").style = "display: none;";
-      document.getElementById("form3").style = "display: none;";
-      document.getElementById("form2").style = "display: block;";
+      // const Nome = document.querySelector(".name").value;
+      const Email = document.querySelector(".email").value;
+      // const Confirmacao = document.querySelector(".confirmacao").value;
+      const CPF = document.querySelector(".cpf").value;
+      // const Celular = document.querySelector(".celphone").value;
+
+      function TestaCPF(strCPF) {
+        var Soma;
+        var Resto;
+        var i;
+        Soma = 0;
+        if (strCPF == "00000000000") return false;
+
+        for (i = 1; i <= 9; i++)
+          Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
+
+        if (Resto == 10 || Resto == 11) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+
+        Soma = 0;
+        for (i = 1; i <= 10; i++)
+          Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+
+        if (Resto == 10 || Resto == 11) Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+        return true;
+      }
+      var strCPF = CPF;
+      alert(TestaCPF(strCPF));
+
+      function TestaEmail() {
+        var reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
+        if (reg.test(Email)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (TestaEmail() === true) {
+        alert("Email: true");
+      } else {
+        alert("Email: false");
+      }
+
+      if(TestaCPF() === false || TestaEmail(strCPF) === false) {
+        alert("tudo errado")
+      } else {
+        ("Boa guerreiro")
+      }
+
+      // document.getElementById("form1").style = "display: none;";
+      //   document.getElementById("form2").style = "display: block;";
+      //   document.getElementById("form3").style = "display: none;";
     },
     hiddenForm2() {
-      document.getElementById("form2").style = "display: none;";
-      document.getElementById("form3").style = "display: block;";
+      // var Pais = document.querySelector(".contry").value;
+      // var Cidade = document.querySelector(".city").value;
+      // var CEP = document.querySelector(".cep").value;
+      // var Endereco = document.querySelector(".adress").value;
+      // var Number = document.querySelector(".number").value;
+      // if (
+      //   (Pais !== "") |
+      //   (Cidade !== "") |
+      //   (CEP !== "") |
+      //   (Endereco !== "") |
+      //   (Number !== "")
+      // ) {
+      //   document.getElementById("form2").style = "display: none;";
+      //   document.getElementById("form1").style = "display: none;";
+      //   document.getElementById("form3").style = "display: block;";
+      // } else {
+      //   alert("Preencha todos os campos corretamente");
+      // }
     },
   },
 };
@@ -164,7 +256,7 @@ export default {
 
 <style scoped>
 * {
-  color: black;
+  color: rgb(0, 0, 0);
 }
 
 input[type="number"]::-webkit-inner-spin-button {
@@ -338,6 +430,11 @@ p {
   color: white;
   background-color: gray;
   cursor: pointer;
+}
+
+#button3 {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -347,6 +444,10 @@ p {
 
 .btn2:hover {
   background-color: rgba(128, 128, 128, 0.616);
+}
+
+.bottonText {
+  font: bold;
 }
 
 #form2 {
