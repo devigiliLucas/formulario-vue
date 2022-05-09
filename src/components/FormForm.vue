@@ -59,16 +59,11 @@
             name="cpf"
             maxlength="14"
             autocomplete="off"
-            pattern="[0-9]{11}"
-            onblur="formataCPF(this)"
           />
           <input
             type="text"
             class="mediumInput paddingInput celphone"
             name="celular"
-            min="1"
-            onblur="mascaraDeTelefone(this)"
-            onfocus="tiraHifen(this)"
           />
         </div>
         <label>Data de nascimento</label>
@@ -185,69 +180,6 @@
 export default {
   name: "FormForm",
   methods: {
-    cpfMask() {
-      function formataCPF(cpf) {
-        const elementoAlvo = cpf;
-        const cpfAtual = cpf.value;
-
-        let cpfAtualizado;
-
-        cpfAtualizado = cpfAtual.replace(
-          /(\d{3})(\d{3})(\d{3})(\d{2})/,
-          function (regex, argumento1, argumento2, argumento3, argumento4) {
-            return (
-              argumento1 +
-              "." +
-              argumento2 +
-              "." +
-              argumento3 +
-              "-" +
-              argumento4
-            );
-          }
-        );
-        elementoAlvo.value = cpfAtualizado;
-      }
-
-      const cpf = document.querySelector("cpf");
-      cpf.addEventListener("input", function (event) {
-        if (cpf.validity.patternMismatch) {
-          cpf.setCustomValidity("Deveria ter apenas números aqui =) ");
-          btnEnviar.disabled = true;
-        } else {
-          cpf.setCustomValidity("");
-          btnEnviar.disabled = false;
-        }
-      });
-    },
-
-    // telphoneMask() {
-    //   function mascaraDeTelefone(telefone) {
-    //     const textoAtual = telefone.value;
-    //     const isCelular = textoAtual.length === 9;
-
-    //     let textoAjustado;
-    //     if (isCelular) {
-    //       const parte1 = textoAtual.slice(0, 5);
-    //       const parte2 = textoAtual.slice(5, 9);
-    //       textoAjustado = `${parte1}-${parte2}`;
-    //     } else {
-    //       const parte1 = textoAtual.slice(0, 4);
-    //       const parte2 = textoAtual.slice(4, 8);
-    //       textoAjustado = `${parte1}-${parte2}`;
-    //     }
-
-    //     telefone.value = textoAjustado;
-    //   }
-
-    //   function tiraHifen(telefone) {
-    //     const textoAtual = telefone.value;
-    //     const textoAjustado = textoAtual.replace(/\-/g, "");
-
-    //     telefone.value = textoAjustado;
-    //   }
-    // },
-
     hiddenForm1() {
       const Nome = document.querySelector(".name").value;
       const Email = document.querySelector(".email").value;
@@ -342,15 +274,15 @@ export default {
 
       function rte() {
         if (
-          (Pais !== "") |
-          (Cidade !== "") |
-          (CEP !== "") |
-          (Endereco !== "") |
-          (Number !== "")
+          Pais === "" ||
+          Cidade === "" ||
+          CEP === "" ||
+          Endereco === "" ||
+          Number === ""
         ) {
-          return true;
-        } else {
           return false;
+        } else {
+          return true;
         }
       }
 
