@@ -54,17 +54,21 @@
         </div>
         <div id="numbers">
           <input
-            type="number"
+            type="text"
             class="mediumInput cpf"
             name="cpf"
             maxlength="14"
             autocomplete="off"
+            pattern="[0-9]{11}"
+            onblur="formataCPF(this)"
           />
           <input
-            type="number"
+            type="text"
             class="mediumInput paddingInput celphone"
             name="celular"
             min="1"
+            onblur="mascaraDeTelefone(this)"
+            onfocus="tiraHifen(this)"
           />
         </div>
         <label>Data de nascimento</label>
@@ -91,7 +95,12 @@
         </p>
         <br />
         <div id="button">
-          <button class="btn next1" @click="hiddenForm1">Enviar</button>
+          <input
+            type="button"
+            class="btn next1"
+            value="confirmar"
+            @click="hiddenForm1"
+          />
         </div>
       </form>
 
@@ -120,7 +129,7 @@
           <label>Endereço</label>
         </div>
         <div id="logradouro2">
-          <input type="text" class="mediumInput cep" required />
+          <input type="number" class="mediumInput cep" required />
           <input
             type="text"
             class="mediumInput paddingInput address"
@@ -129,9 +138,14 @@
         </div>
         <label>Número</label>
         <br />
-        <input type="text" class="bigInput number" required />
+        <input type="number" class="bigInput number" required />
         <div id="button">
-          <button class="btn next2" @click="hiddenForm2">Confirmar</button>
+          <input
+            type="button"
+            class="btn next2"
+            value="Confirmar"
+            @click="hiddenForm2()"
+          />
         </div>
       </form>
 
@@ -171,14 +185,77 @@
 export default {
   name: "FormForm",
   methods: {
-    hiddenForm1() {
-      // const Nome = document.querySelector(".name").value;
-      const Email = document.querySelector(".email").value;
-      // const Confirmacao = document.querySelector(".confirmacao").value;
-      const CPF = document.querySelector(".cpf").value;
-      // const Celular = document.querySelector(".celphone").value;
+    cpfMask() {
+      function formataCPF(cpf) {
+        const elementoAlvo = cpf;
+        const cpfAtual = cpf.value;
 
-      function TestaCPF(strCPF) {
+        let cpfAtualizado;
+
+        cpfAtualizado = cpfAtual.replace(
+          /(\d{3})(\d{3})(\d{3})(\d{2})/,
+          function (regex, argumento1, argumento2, argumento3, argumento4) {
+            return (
+              argumento1 +
+              "." +
+              argumento2 +
+              "." +
+              argumento3 +
+              "-" +
+              argumento4
+            );
+          }
+        );
+        elementoAlvo.value = cpfAtualizado;
+      }
+
+      const cpf = document.querySelector("cpf");
+      cpf.addEventListener("input", function (event) {
+        if (cpf.validity.patternMismatch) {
+          cpf.setCustomValidity("Deveria ter apenas números aqui =) ");
+          btnEnviar.disabled = true;
+        } else {
+          cpf.setCustomValidity("");
+          btnEnviar.disabled = false;
+        }
+      });
+    },
+
+    // telphoneMask() {
+    //   function mascaraDeTelefone(telefone) {
+    //     const textoAtual = telefone.value;
+    //     const isCelular = textoAtual.length === 9;
+
+    //     let textoAjustado;
+    //     if (isCelular) {
+    //       const parte1 = textoAtual.slice(0, 5);
+    //       const parte2 = textoAtual.slice(5, 9);
+    //       textoAjustado = `${parte1}-${parte2}`;
+    //     } else {
+    //       const parte1 = textoAtual.slice(0, 4);
+    //       const parte2 = textoAtual.slice(4, 8);
+    //       textoAjustado = `${parte1}-${parte2}`;
+    //     }
+
+    //     telefone.value = textoAjustado;
+    //   }
+
+    //   function tiraHifen(telefone) {
+    //     const textoAtual = telefone.value;
+    //     const textoAjustado = textoAtual.replace(/\-/g, "");
+
+    //     telefone.value = textoAjustado;
+    //   }
+    // },
+
+    hiddenForm1() {
+      const Nome = document.querySelector(".name").value;
+      const Email = document.querySelector(".email").value;
+      const Confirmacao = document.querySelector(".confirmacao").value;
+      const CPF = document.querySelector(".cpf").value;
+      const Celular = document.querySelector(".celphone").value;
+
+      function isCPF(strCPF) {
         var Soma;
         var Resto;
         var i;
@@ -202,9 +279,8 @@ export default {
         return true;
       }
       var strCPF = CPF;
-      alert(TestaCPF(strCPF));
 
-      function TestaEmail() {
+      function isEmail() {
         var reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
         if (reg.test(Email)) {
@@ -214,41 +290,77 @@ export default {
         }
       }
 
-      if (TestaEmail() === true) {
-        alert("Email: true");
-      } else {
-        alert("Email: false");
+      function sameEmail() {
+        if (Email === Confirmacao && Email !== "") {
+          return true;
+        } else {
+          return false;
+        }
       }
 
-      if(TestaCPF() === false || TestaEmail(strCPF) === false) {
-        alert("tudo errado")
-      } else {
-        ("Boa guerreiro")
+      function isWritten() {
+        if (
+          Nome !== "" ||
+          Email !== "" ||
+          Confirmacao !== "" ||
+          CPF !== "" ||
+          Celular !== ""
+        ) {
+          return true;
+        } else {
+          return false;
+        }
       }
 
-      // document.getElementById("form1").style = "display: none;";
-      //   document.getElementById("form2").style = "display: block;";
-      //   document.getElementById("form3").style = "display: none;";
+      function confirmation() {
+        if (
+          isCPF(strCPF) === true &&
+          isEmail() === true &&
+          sameEmail() === true &&
+          isWritten() === true
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (confirmation() === true) {
+        document.getElementById("form1").style = "display: none;";
+        document.getElementById("form2").style = "display: block;";
+        document.getElementById("form3").style = "display: none;";
+      } else {
+        alert("Preencha todos os campos corretamente");
+      }
     },
     hiddenForm2() {
-      // var Pais = document.querySelector(".contry").value;
-      // var Cidade = document.querySelector(".city").value;
-      // var CEP = document.querySelector(".cep").value;
-      // var Endereco = document.querySelector(".adress").value;
-      // var Number = document.querySelector(".number").value;
-      // if (
-      //   (Pais !== "") |
-      //   (Cidade !== "") |
-      //   (CEP !== "") |
-      //   (Endereco !== "") |
-      //   (Number !== "")
-      // ) {
-      //   document.getElementById("form2").style = "display: none;";
-      //   document.getElementById("form1").style = "display: none;";
-      //   document.getElementById("form3").style = "display: block;";
-      // } else {
-      //   alert("Preencha todos os campos corretamente");
-      // }
+      var Pais = document.querySelector(".contry").value;
+      var Cidade = document.querySelector(".city").value;
+      var CEP = document.querySelector(".cep").value;
+      var Endereco = document.querySelector(".address").value;
+      var Number = document.querySelector(".number").value;
+
+      function rte() {
+        if (
+          (Pais !== "") |
+          (Cidade !== "") |
+          (CEP !== "") |
+          (Endereco !== "") |
+          (Number !== "")
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (rte() === true) {
+        document.getElementById("form2").style = "display: none;";
+        document.getElementById("form1").style = "display: none;";
+        document.getElementById("form3").style = "display: block;";
+      } else {
+        alert("Preencha todos os campos corretamente");
+      }
     },
   },
 };
